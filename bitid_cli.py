@@ -25,6 +25,7 @@ def main(argv):
     for opt, arg in opts:
         if opt == '-n':
             message['nonce'] = arg
+            print ('nonce', message['nonce'])
         if opt == '-c':
             message['callback'] = arg
         if opt == '-a':
@@ -34,21 +35,23 @@ def main(argv):
         if opt == '-s':
             message['signature'] = arg
 
-    if message['address'] != '':
-        message['valid_address'] = str( bitid.address_valid( message['address'] ) )
+        if message['address'] != '':
+            message['valid_address'] = str( bitid.address_valid( message['address'] ) )
 
-    if message['uri'] != '' and message['callback'] != '':
-        message['valid_uri'] = str( bitid.uri_valid( message['uri'], message['callback'] ) )
+        if message['callback'] != '':
+            if message['uri'] != '':
+                message['valid_uri'] = str( bitid.uri_valid( message['uri'], message['callback'] ) )
 
-    if message['address'] != '' and message['signature'] != '' and message['uri'] != '' and message['callback'] != '':
-        valid_signature = bitid.signature_valid( message['address'], message['signature'], message['uri'], message['callback'] )
-        message['valid_signature'] = str( valid_signature )
-
-    if message['callback'] and message['nonce'] == '':
-        message['nonce'] = bitid.generate_nonce()
-
-        message['uri'] = bitid.build_uri( message['callback'], message['nonce'] )
-        message['qrcode'] = bitid.qrcode( message['uri'] )
+                if message['address'] != '' and message['signature'] != '':
+                    valid_signature = bitid.signature_valid( message['address'], message['signature'], message['uri'], message['callback'] )
+                    message['valid_signature'] = str( valid_signature )
+            else:
+                if message['nonce'] == '':
+                    print ('generating nonce')
+                    message['nonce'] = bitid.generate_nonce()
+                print (message['nonce'])
+                message['uri'] = bitid.build_uri( message['callback'], message['nonce'] )
+                message['qrcode'] = bitid.qrcode( message['uri'] )
 
     return json.dumps(message)
   

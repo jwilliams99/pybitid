@@ -142,7 +142,30 @@ To extract the secure/unsecure parameter from a BitId uri
 import pybitid.bitid as bitid
 sec_param = bitid.extract_unsecure(bitid_uri)
 ```
+## CLI Usage
+bitid_cli.py is a commandline interface to the main library.  Input is via switches, and outout is a JSON formatted string.
+```
+Generating a QR code
+python bitid_cli.py -c "https://www.mysite.com:8080/"
+python bitid_cli.py -c "https://www.mysite.com:8080/" -n fe32e61882a71074
 
+Verifying a signature
+python bitid_cli.py -a <bitcoin address> -u "bitid://www.mysite.com:8080/?x=fe32e61882a71074&u=1" -s <signature returned by wallet> -c "https://www.mysite.com:8080/"
+
+Example output (JSON formatted for readibility)
+python ./bitid_cli.py -c "https://www.mysite.com:8080/"
+{
+    "nonce": "fe32e61882a71074"
+  , "callback": "https://www.mysite.com:8080/"
+  , "valid_signature": ""
+  , "address": ""
+  , "qrcode": "https://chart.googleapis.com/chart?cht=qr&chs=300x300&chl=bitid%3A//www.mysite.com%3A8080/%3Fx%3D5b0f4b111e4fb0ea"
+  , "valid_address": ""
+  , "signature": ""
+  , "valid_uri": ""
+  , "uri": "bitid://www.mysite.com:8080/?x=5b0f4b111e4fb0ea"
+}
+```
 
 ## Integration example
 
@@ -152,6 +175,9 @@ Live demonstration : http://vps90685.ovh.net:8080/
 
 ## Author
 Twitter: @LaurentMT
+
+##Contributors
+Twitter: @ryszard99 (bitid_cli)
 
 
 ## Contributing
